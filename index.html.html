@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Academic Experience Analyzer</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #f4f7fb;
+    color: #1f2937;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(135deg, #243b55, #141e30);
+    color: white;
+    padding: 25px 40px;
+}
+
+header h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+header p {
+    color: #dbeafe;
+}
+
+/* MAIN */
+
+.container {
+    width: 92%;
+    max-width: 1300px;
+    margin: 30px auto;
+}
+
+/* GRID */
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    color: #1e3a8a;
+}
+
+/* INPUT */
+
+textarea {
+    width: 100%;
+    height: 220px;
+    border: 2px solid #dbe3ef;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 16px;
+    resize: vertical;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #2563eb;
+}
+
+button {
+    margin-top: 15px;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+.secondary {
+    background: #64748b;
+    margin-left: 8px;
+}
+
+.secondary:hover {
+    background: #475569;
+}
+
+/* RESULT */
+
+.result {
+    text-align: center;
+    padding: 20px;
+    border-radius: 12px;
+    background: #f8fafc;
+}
+
+.emotion {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.status {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.score {
+    font-size: 18px;
+    color: #475569;
+}
+
+/* INDICATORS */
+
+.indicator {
+    margin: 15px 0;
+}
+
+.indicator-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.progress {
+    height: 12px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.6s ease;
+}
+
+/* COLORS */
+
+.stress {
+    background: #ef4444;
+}
+
+.frustration {
+    background: #f97316;
+}
+
+.overload {
+    background: #8b5cf6;
+}
+
+.workload {
+    background: #eab308;
+}
+
+.disengagement {
+    background: #64748b;
+}
+
+.positive {
+    background: #22c55e;
+}
+
+/* EXPLANATION */
+
+.explanation {
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+/* DASHBOARD */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+}
+
+.stat h3 {
+    font-size: 28px;
+    color: #2563eb;
+}
+
+.stat p {
+    margin-top: 5px;
+    color: #64748b;
+}
+
+/* HISTORY */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+th {
+    background: #eff6ff;
+}
+
+/* RESPONSIVE */
+
+@media(max-width: 850px) {
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+
+<h1>🎓 Student Academic Experience Analyzer</h1>
+
+<p>
+Context-aware analysis of student feedback, stress, workload,
+frustration and disengagement
+</p>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- DASHBOARD -->
+
+<div class="dashboard">
+
+<div class="stat">
+<h3 id="totalStudents">0</h3>
+<p>Responses Analyzed</p>
+</div>
+
+<div class="stat">
+<h3 id="stressCount">0</h3>
+<p>Stress Alerts</p>
+</div>
+
+<div class="stat">
+<h3 id="overloadCount">0</h3>
+<p>Overload Alerts</p>
+</div>
+
+<div class="stat">
+<h3 id="positiveCount">0</h3>
+<p>Positive Responses</p>
+</div>
+
+</div>
+
+<br>
+
+
+<div class="grid">
+
+
+<!-- INPUT -->
+
+<div class="card">
+
+<h2>📝 Student Feedback</h2>
+
+<p style="margin-bottom:12px;color:#64748b;">
+Enter a student's academic experience below.
+</p>
+
+<textarea id="feedback"
+placeholder="Example:
+I have several assignments due this week and I am finding it difficult to concentrate. I feel exhausted and stressed because there is too much work."></textarea>
+
+<br>
+
+<button onclick="analyzeFeedback()">
+🔍 Analyze Experience
+</button>
+
+<button class="secondary" onclick="loadExample()">
+Example
+</button>
+
+</div>
+
+
+<!-- RESULT -->
+
+<div class="card">
+
+<h2>📊 Analysis Result</h2>
+
+<div class="result">
+
+<div class="emotion" id="emotion">
+😊
+</div>
+
+<div class="status" id="status">
+Waiting for analysis
+</div>
+
+<div class="score" id="score">
+Academic Well-being Score: -
+</div>
+
+</div>
+
+<div id="indicators">
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Stress</span>
+<span id="stressValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="stressBar"
+class="progress-bar stress"></div>
+</div>
+
+</div>
+
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Frustration</span>
+<span id="frustrationValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="frustrationBar"
+class="progress-bar frustration"></div>
+</div>
+
+</div>
+
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Cognitive Overload</span>
+<span id="overloadValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="overloadBar"
+class="progress-bar overload"></div>
+</div>
+
+</div>
+
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Workload Difficulty</span>
+<span id="workloadValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="workloadBar"
+class="progress-bar workload"></div>
+</div>
+
+</div>
+
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Disengagement</span>
+<span id="disengagementValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="disengagementBar"
+class="progress-bar disengagement"></div>
+</div>
+
+</div>
+
+
+<div class="indicator">
+
+<div class="indicator-header">
+<span>Positive Experience</span>
+<span id="positiveValue">0%</span>
+</div>
+
+<div class="progress">
+<div id="positiveBar"
+class="progress-bar positive"></div>
+</div>
+
+</div>
+
+</div>
+
+<div class="explanation" id="explanation">
+
+The system will explain the detected academic and emotional indicators here.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- HISTORY -->
+
+<div class="card">
+
+<h2>📋 Analysis History</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>#</th>
+<th>Detected State</th>
+<th>Stress</th>
+<th>Overload</th>
+<th>Workload</th>
+<th>Disengagement</th>
+</tr>
+
+</thead>
+
+<tbody id="history">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+/* =========================================
+   DATA
+========================================= */
+
+let analysisHistory = [];
+
+let statistics = {
+
+    total: 0,
+    stress: 0,
+    overload: 0,
+    positive: 0
+
+};
+
+
+/* =========================================
+   CONTEXTUAL PHRASES
+========================================= */
+
+const patterns = {
+
+stress: [
+
+    "very stressed",
+    "extremely stressed",
+    "under stress",
+    "feel stressed",
+    "feeling stressed",
+    "stressful",
+    "stress",
+    "anxious",
+    "anxiety",
+    "worried",
+    "overwhelmed",
+    "pressure",
+    "academic pressure",
+    "exam pressure",
+    "can't cope",
+    "cannot cope"
+
+],
+
+frustration: [
+
+    "frustrated",
+    "frustrating",
+    "fed up",
+    "annoyed",
+    "angry",
+    "irritated",
+    "nothing works",
+    "keep failing",
+    "keeps failing",
+    "difficult to understand",
+    "cannot understand",
+    "can't understand",
+    "confusing",
+    "confused",
+    "struggling"
+
+],
+
+overload: [
+
+    "too much information",
+    "too much to learn",
+    "too many concepts",
+    "information overload",
+    "cognitive overload",
+    "cannot concentrate",
+    "can't concentrate",
+    "difficult to concentrate",
+    "hard to concentrate",
+    "my mind is full",
+    "mentally exhausted",
+    "mentally tired",
+    "brain is tired",
+    "too many subjects",
+    "too many topics"
+
+],
+
+workload: [
+
+    "too much work",
+    "heavy workload",
+    "large workload",
+    "workload is high",
+    "many assignments",
+    "several assignments",
+    "multiple assignments",
+    "too many assignments",
+    "too much homework",
+    "many deadlines",
+    "tight deadline",
+    "deadlines",
+    "project workload",
+    "assignment workload",
+    "backlog",
+    "unable to complete",
+    "cannot complete",
+    "can't complete"
+
+],
+
+disengagement: [
+
+    "not interested",
+    "no interest",
+    "lost interest",
+    "don't want to study",
+    "do not want to study",
+    "don't feel like studying",
+    "do not feel like studying",
+    "boring",
+    "bored",
+    "disconnected",
+    "disengaged",
+    "giving up",
+    "give up",
+    "skip classes",
+    "skipping classes",
+    "avoid classes",
+    "not motivated",
+    "unmotivated"
+
+],
+
+positive: [
+
+    "happy",
+    "satisfied",
+    "enjoy",
+    "enjoying",
+    "interesting",
+    "motivated",
+    "motivating",
+    "confident",
+    "comfortable",
+    "manageable",
+    "understand well",
+    "learning well",
+    "doing well",
+    "good experience",
+    "great experience",
+    "helpful",
+    "supportive",
+    "successful"
+
+]
+
+};
+
+
+/* =========================================
+   NEGATION DETECTION
+========================================= */
+
+function isNegated(text, phrase) {
+
+    const index = text.indexOf(phrase);
+
+    if (index === -1)
+        return false;
+
+    const before = text.substring(
+        Math.max(0, index - 40),
+        index
+    );
+
+    const negations = [
+
+        "not",
+        "no",
+        "never",
+        "don't",
+        "do not",
+        "isn't",
+        "is not",
+        "wasn't",
+        "was not",
+        "cannot",
+        "can't"
+
+    ];
+
+    for (let word of negations) {
+
+        if (before.includes(word))
+            return true;
+
+    }
+
+    return false;
+}
+
+
+/* =========================================
+   COUNT CONTEXTUAL PHRASES
+========================================= */
+
+function calculateIndicator(text, phrases) {
+
+    let score = 0;
+    let detected = [];
+
+    for (let phrase of phrases) {
+
+        if (text.includes(phrase)) {
+
+            if (!isNegated(text, phrase)) {
+
+                score++;
+                detected.push(phrase);
+
+            }
+
+        }
+
+    }
+
+    return {
+        score: score,
+        detected: detected
+    };
+
+}
+
+
+/* =========================================
+   INTENSITY DETECTION
+========================================= */
+
+function intensityMultiplier(text) {
+
+    let multiplier = 1;
+
+    const strongWords = [
+
+        "extremely",
+        "very",
+        "severely",
+        "completely",
+        "constantly",
+        "extremely difficult",
+        "totally"
+
+    ];
+
+    for (let word of strongWords) {
+
+        if (text.includes(word))
+            multiplier += 0.25;
+
+    }
+
+    return Math.min(multiplier, 2);
+
+}
+
+
+/* =========================================
+   ANALYZE
+========================================= */
+
+function analyzeFeedback() {
+
+    let input =
+        document.getElementById("feedback").value
+        .toLowerCase()
+        .replace(/[^\w\s']/g, " ");
+
+    if (input.trim() === "") {
+
+        alert("Please enter student feedback.");
+
+        return;
+
+    }
+
+
+    let multiplier = intensityMultiplier(input);
+
+
+    let stress =
+        calculateIndicator(input, patterns.stress);
+
+    let frustration =
+        calculateIndicator(input, patterns.frustration);
+
+    let overload =
+        calculateIndicator(input, patterns.overload);
+
+    let workload =
+        calculateIndicator(input, patterns.workload);
+
+    let disengagement =
+        calculateIndicator(input, patterns.disengagement);
+
+    let positive =
+        calculateIndicator(input, patterns.positive);
+
+
+    /* SCORE NORMALIZATION */
+
+    let stressScore =
+        Math.min(100,
+        stress.score * 22 * multiplier);
+
+    let frustrationScore =
+        Math.min(100,
+        frustration.score * 22 * multiplier);
+
+    let overloadScore =
+        Math.min(100,
+        overload.score * 22 * multiplier);
+
+    let workloadScore =
+        Math.min(100,
+        workload.score * 20 * multiplier);
+
+    let disengagementScore =
+        Math.min(100,
+        disengagement.score * 22 * multiplier);
+
+    let positiveScore =
+        Math.min(100,
+        positive.score * 20 * multiplier);
+
+
+    /* =====================================
+       OVERALL NEGATIVE SCORE
+    ===================================== */
+
+    let negativeScore =
+        (
+
+            stressScore +
+            frustrationScore +
+            overloadScore +
+            workloadScore +
+            disengagementScore
+
+        ) / 5;
+
+
+    let wellbeing =
+        Math.max(
+            0,
+            Math.round(
+                100 -
+                negativeScore +
+                positiveScore * 0.35
+            )
+        );
+
+    wellbeing =
+        Math.min(100, wellbeing);
+
+
+    /* =====================================
+       DETERMINE DOMINANT STATE
+    ===================================== */
+
+    let scores = {
+
+        "Stress": stressScore,
+
+        "Frustration": frustrationScore,
+
+        "Cognitive Overload": overloadScore,
+
+        "Workload Difficulty": workloadScore,
+
+        "Disengagement": disengagementScore,
+
+        "Positive": positiveScore
+
+    };
+
+
+    let dominant =
+        Object.keys(scores)
+        .reduce((a,b) =>
+            scores[a] > scores[b] ? a : b
+        );
+
+
+    let state;
+
+    let emoji;
+
+
+    if (positiveScore >= 40 &&
+        negativeScore < 25) {
+
+        state = "Positive Academic Experience";
+        emoji = "😊";
+
+    }
+
+    else if (overloadScore >= 45) {
+
+        state = "Cognitive Overload Detected";
+        emoji = "🧠";
+
+    }
+
+    else if (workloadScore >= 45) {
+
+        state = "High Workload Difficulty";
+        emoji = "📚";
+
+    }
+
+    else if (stressScore >= 45) {
+
+        state = "High Stress Detected";
+        emoji = "😟";
+
+    }
+
+    else if (frustrationScore >= 45) {
+
+        state = "Frustration Detected";
+        emoji = "😣";
+
+    }
+
+    else if (disengagementScore >= 45) {
+
+        state = "Possible Disengagement";
+        emoji = "😴";
+
+    }
+
+    else if (negativeScore >= 30) {
+
+        state = "Academic Difficulty Detected";
+        emoji = "⚠️";
+
+    }
+
+    else {
+
+        state = "Generally Stable";
+        emoji = "🙂";
+
+    }
+
+
+    /* =====================================
+       UPDATE UI
+    ===================================== */
+
+    document.getElementById("emotion")
+        .innerText = emoji;
+
+    document.getElementById("status")
+        .innerText = state;
+
+    document.getElementById("score")
+        .innerText =
+        "Academic Well-being Score: "
+        + wellbeing
+        + "/100";
+
+
+    updateIndicator(
+        "stress",
+        stressScore
+    );
+
+    updateIndicator(
+        "frustration",
+        frustrationScore
+    );
+
+    updateIndicator(
+        "overload",
+        overloadScore
+    );
+
+    updateIndicator(
+        "workload",
+        workloadScore
+    );
+
+    updateIndicator(
+        "disengagement",
+        disengagementScore
+    );
+
+    updateIndicator(
+        "positive",
+        positiveScore
+    );
+
+
+    /* =====================================
+       EXPLANATION
+    ===================================== */
+
+    let reasons = [];
+
+
+    if (stress.detected.length > 0)
+
+        reasons.push(
+            "Stress indicators: "
+            + stress.detected.join(", ")
+        );
+
+
+    if (frustration.detected.length > 0)
+
+        reasons.push(
+            "Frustration indicators: "
+            + frustration.detected.join(", ")
+        );
+
+
+    if (overload.detected.length > 0)
+
+        reasons.push(
+            "Cognitive overload indicators: "
+            + overload.detected.join(", ")
+        );
+
+
+    if (workload.detected.length > 0)
+
+        reasons.push(
+            "Workload indicators: "
+            + workload.detected.join(", ")
+        );
+
+
+    if (disengagement.detected.length > 0)
+
+        reasons.push(
+            "Disengagement indicators: "
+            + disengagement.detected.join(", ")
+        );
+
+
+    if (positive.detected.length > 0)
+
+        reasons.push(
+            "Positive indicators: "
+            + positive.detected.join(", ")
+        );
+
+
+    let explanation;
+
+
+    if (reasons.length === 0) {
+
+        explanation =
+            "No strong emotional or academic difficulty indicators were detected. " +
+            "The feedback may require deeper semantic analysis.";
+
+    }
+
+    else {
+
+        explanation =
+            "<strong>Why was this result generated?</strong><br><br>"
+            +
+            reasons.join("<br><br>");
+
+    }
+
+
+    document.getElementById("explanation")
+        .innerHTML = explanation;
+
+
+    /* =====================================
+       UPDATE STATISTICS
+    ===================================== */
+
+    statistics.total++;
+
+
+    if (stressScore >= 45)
+        statistics.stress++;
+
+
+    if (overloadScore >= 45)
+        statistics.overload++;
+
+
+    if (positiveScore >= 40 &&
+        negativeScore < 25)
+
+        statistics.positive++;
+
+
+    document.getElementById("totalStudents")
+        .innerText = statistics.total;
+
+    document.getElementById("stressCount")
+        .innerText = statistics.stress;
+
+    document.getElementById("overloadCount")
+        .innerText = statistics.overload;
+
+    document.getElementById("positiveCount")
+        .innerText = statistics.positive;
+
+
+    /* =====================================
+       HISTORY
+    ===================================== */
+
+    analysisHistory.push({
+
+        state: state,
+
+        stress: Math.round(stressScore),
+
+        overload: Math.round(overloadScore),
+
+        workload: Math.round(workloadScore),
+
+        disengagement:
+            Math.round(disengagementScore)
+
+    });
+
+
+    updateHistory();
+
+}
+
+
+/* =========================================
+   UPDATE INDICATOR
+========================================= */
+
+function updateIndicator(name, value) {
+
+    value = Math.round(value);
+
+    document.getElementById(
+        name + "Value"
+    ).innerText = value + "%";
+
+    document.getElementById(
+        name + "Bar"
+    ).style.width = value + "%";
+
+}
+
+
+/* =========================================
+   HISTORY TABLE
+========================================= */
+
+function updateHistory() {
+
+    let table =
+        document.getElementById("history");
+
+    table.innerHTML = "";
+
+
+    analysisHistory.forEach(
+        (item, index) => {
+
+            let row =
+                document.createElement("tr");
+
+
+            row.innerHTML = `
+
+                <td>${index + 1}</td>
+
+                <td>${item.state}</td>
+
+                <td>${item.stress}%</td>
+
+                <td>${item.overload}%</td>
+
+                <td>${item.workload}%</td>
+
+                <td>${item.disengagement}%</td>
+
+            `;
+
+
+            table.appendChild(row);
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   EXAMPLE
+========================================= */
+
+function loadExample() {
+
+    document.getElementById("feedback").value =
+
+    "I have several assignments due this week and " +
+    "I am finding it difficult to concentrate. " +
+    "There is too much work and I feel extremely stressed. " +
+    "I am mentally exhausted and worried about the deadlines. " +
+    "I am struggling to manage all my subjects.";
+
+}
+
+</script>
+
+</body>
+</html>
